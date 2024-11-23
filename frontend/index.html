@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Frontend</title>
+</head>
+<body>
+  <h1>Welcome to the Backend Server</h1>
+
+  <h2>Get User Info</h2>
+  <form id="getUserForm">
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" name="userId" required>
+    <button type="submit">Get User Info</button>
+  </form>
+  <p id="userInfo"></p>
+
+  <h2>Submit User Info</h2>
+  <form id="submitForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required>
+    <button type="submit">Submit</button>
+  </form>
+  <p id="submitResponse"></p>
+
+  <script>
+    // GET 请求 - 获取用户信息
+    document.getElementById('getUserForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const userId = document.getElementById('userId').value;
+
+      fetch(`http://localhost:3000/user/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('userInfo').textContent = `User Info: ${JSON.stringify(data)}`;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    // POST 请求 - 提交用户信息
+    document.getElementById('submitForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const age = document.getElementById('age').value;
+
+      fetch('http://localhost:3000/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, age }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('submitResponse').textContent = `Response: ${JSON.stringify(data)}`;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+  </script>
+</body>
+</html>
